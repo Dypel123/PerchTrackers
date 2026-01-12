@@ -1,0 +1,21 @@
+name: "&#FEC300Tracker &8| &fEndermen Killed"
+item: "COMPASS"
+type: "MOB_KILL"
+lore-format: "&fEndermen Slain &8| &6{count_commas}"
+description:
+  - "&fOne-time use tracker."
+  - "&f"
+  - "&eApplies to:"
+  - "&fWeapons"
+  - ""
+  - "&eDrag and drop&f onto item to apply."
+allowed-items:
+  - "*_SWORD"
+  - "*_AXE"
+  - "*_SPEAR"
+  - "MACE"
+  - "BOW"
+  - "CROSSBOW"
+  - "TRIDENT"
+allowed-targets:
+  - "ENDERMAN"

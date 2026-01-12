@@ -1,0 +1,15 @@
+name: "&#FEC300Tracker &8| &fDebris Mined"
+item: "COMPASS"
+type: "BLOCK_BREAK"
+lore-format: "&fDebris Mined &8| &6{count_commas}"
+description:
+  - "&fOne-time use tracker."
+  - "&f"
+  - "&eApplies to:"
+  - "&fPickaxes"
+  - ""
+  - "&eDrag and drop&f onto item to apply."
+allowed-items:
+  - "*_PICKAXE"
+allowed-targets:
+  - "ANCIENT_DEBRIS"

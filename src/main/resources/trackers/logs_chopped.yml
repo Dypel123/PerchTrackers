@@ -1,0 +1,19 @@
+name: "&#FEC300Tracker &8| &fLogs Chopped"
+item: "COMPASS"
+type: "BLOCK_BREAK"
+lore-format: "&fLogs Chopped &8| &6{count_commas}"
+description:
+  - "&fOne-time use tracker."
+  - "&f"
+  - "&eApplies to:"
+  - "&fAxes"
+  - ""
+  - "&eDrag and drop&f onto item to apply."
+allowed-items:
+  - "*_AXE"
+allowed-targets:
+  - "*_LOG"
+  - "*_STEM"
+  - "BAMBOO_BLOCK"
+  - "CHERRY_LOG"
+  - "MANGROVE_LOG"

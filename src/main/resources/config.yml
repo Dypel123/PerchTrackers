@@ -1,0 +1,22 @@
+messages:
+  prefix: "&6Trackers &8»&7 "
+  reload: "Configuration reloaded."
+  tracker_given: "Given tracker &b%id% &7to &f%player%&7."
+  tracker_removed: "Tracker removed from item and returned to inventory."
+  no_item: "You must be holding an item."
+  no_tracker_on_item: "This item does not have that tracker."
+  tracker_applied: "Tracker applied successfully!"
+  tracker_already_applied: "This item already has this tracker!"
+  invalid_tracker: "Tracker file not found."
+  invalid_item_type: "&cThis tracker cannot be applied to this type of item."
+
+  application-effects:
+    sound:
+      enabled: true
+      type: "ENTITY_PLAYER_LEVELUP"
+      volume: 1.0
+      pitch: 1.0
+    particle:
+      enabled: true
+      type: "HAPPY_VILLAGER"
+      count: 15

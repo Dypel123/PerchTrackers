@@ -1,0 +1,17 @@
+name: "&#FEC300Tracker &8| &fTimes Voted"
+item: "COMPASS"
+type: "VOTE"
+lore-format: "&fTimes Voted &8| &6{count_commas}"
+description:
+  - "&fOne-time use tracker."
+  - "&f"
+  - "&eApplies to:"
+  - "&fArmor, Elytra"
+  - ""
+  - "&eDrag and drop&f onto item to apply."
+allowed-items:
+  - "*_HELMET"
+  - "*_CHESTPLATE"
+  - "*_LEGGINGS"
+  - "*_BOOTS"
+  - "ELYTRA"

@@ -1,0 +1,24 @@
+plugins {
+    id 'java'
+    id 'com.gradleup.shadow' version '8.3.5'
+}
+
+group = 'me.perch'
+version = '1.0.0'
+
+repositories {
+    mavenCentral()
+    maven { url "https://repo.papermc.io/repository/maven-public/" }
+
+    maven { url 'https://jitpack.io' }
+}
+
+dependencies {
+    compileOnly "io.papermc.paper:paper-api:1.21.1-R0.1-SNAPSHOT"
+
+    compileOnly "com.github.NuVotifier:NuVotifier:2.7.2"
+}
+
+java {
+    toolchain.languageVersion = JavaLanguageVersion.of(21)
+}

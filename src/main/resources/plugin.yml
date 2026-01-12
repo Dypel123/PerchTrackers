@@ -1,0 +1,16 @@
+name: PerchTrackers
+version: 1.0.0
+main: me.perch.Trackers
+api-version: 1.21.11
+authors: [KayaLambrex]
+depend:
+  - Votifier
+commands:
+  trackers:
+    description: Admin command to manage trackers
+    usage: /trackers <give|remove>
+    permission: perchtrackers.admin
+permissions:
+  perchtrackers.admin:
+    description: Allows full access to tracker commands
+    default: op

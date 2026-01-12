@@ -1,0 +1,17 @@
+name: "&#FEC300Tracker &8| &fFood Eaten"
+item: "COMPASS"
+type: "ITEM_CONSUME"
+lore-format: "&fFood Eaten &8| &6{count_commas}"
+description:
+  - "&fOne-time use tracker."
+  - "&f"
+  - "&eApplies to:"
+  - "&fArmor"
+  - ""
+  - "&eDrag and drop&f onto item to apply."
+allowed-items:
+  - "*_HELMET"
+  - "*_CHESTPLATE"
+  - "*_LEGGINGS"
+  - "*_BOOTS"
+  - "ELYTRA"

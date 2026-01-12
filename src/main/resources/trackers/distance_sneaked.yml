@@ -1,0 +1,13 @@
+name: "&#FEC300Tracker &8| &fDistance Sneaked"
+item: "COMPASS"
+type: "MOVE"
+lore-format: "&fDistance Sneaked &8| &6{count_commas} blocks"
+description:
+  - "&fOne-time use tracker."
+  - "&f"
+  - "&eApplies to:"
+  - "&fLeggings"
+  - ""
+  - "&eDrag and drop&f onto item to apply."
+allowed-items:
+  - "*_LEGGINGS"

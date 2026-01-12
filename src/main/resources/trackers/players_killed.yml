@@ -1,0 +1,18 @@
+name: "&#FEC300Tracker &8| &fPlayers Killed"
+item: "COMPASS"
+type: "PLAYER_KILL"
+lore-format: "&fPlayers Killed &8| &6{count_commas}"
+description:
+  - "&fOne-time use tracker."
+  - "&f"
+  - "&eApplies to:"
+  - "&fWeapons"
+  - ""
+  - "&eDrag and drop&f onto item to apply."
+allowed-items:
+  - "*_SWORD"
+  - "*_AXE"
+  - "BOW"
+  - "CROSSBOW"
+  - "TRIDENT"
+  - "MACE"

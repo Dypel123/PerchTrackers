@@ -5,6 +5,7 @@ import com.vexsoftware.votifier.model.VotifierEvent;
 import io.papermc.paper.event.player.PlayerTradeEvent;
 import me.perch.Trackers;
 import me.perch.util.ItemUtil;
+import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -266,9 +267,29 @@ public class TrackerListener implements Listener {
         }
 
         else if (type == Material.CAKE || type.name().endsWith("CANDLE_CAKE")) {
-            if (e.getPlayer().getFoodLevel() < 20) {
-                checkTrackers(e.getPlayer(), "ITEM_CONSUME", "CAKE", 1, e.getClickedBlock());
-            }
+
+            Player player = e.getPlayer();
+            Block block = e.getClickedBlock();
+
+            if (!(block.getBlockData() instanceof org.bukkit.block.data.type.Cake cake)) return;
+
+            int bitesBefore = cake.getBites();
+
+            Bukkit.getScheduler().runTask(plugin, () -> {
+
+                if (!(block.getBlockData() instanceof org.bukkit.block.data.type.Cake newCake)) {
+                    checkTrackers(player, "ITEM_CONSUME", "CAKE", 1, block);
+                    return;
+                }
+
+                int bitesAfter = newCake.getBites();
+                int eaten = bitesAfter - bitesBefore;
+
+                if (eaten > 0) {
+                    checkTrackers(player, "ITEM_CONSUME", "CAKE", eaten, block);
+                }
+
+            });
         }
     }
 

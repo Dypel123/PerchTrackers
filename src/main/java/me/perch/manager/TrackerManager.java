@@ -14,7 +14,7 @@ import java.util.*;
 
 public class TrackerManager {
 
-    private final Trackers plugin;ÍÍ
+    private final Trackers plugin;
     private final Map<String, YamlConfiguration> loadedTrackers = new HashMap<>();
 
     public final NamespacedKey TRACKER_ID_KEY;

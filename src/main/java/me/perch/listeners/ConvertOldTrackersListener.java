@@ -28,7 +28,6 @@ public class ConvertOldTrackersListener implements Listener {
     }
 
     private void initializeMappings() {
-
         conversionMap.put("arrows shot", "arrows_shot");
         conversionMap.put("blocks broken", "blocks_broken");
         conversionMap.put("blocks placed", "blocks_placed");
@@ -67,9 +66,8 @@ public class ConvertOldTrackersListener implements Listener {
         }
 
         if (playerUpdated) {
-            player.sendMessage(ChatColor.GREEN + "&6Trackers &8»&7 Your old trackers have been converted! Once you gain a point in the tracker, it will automatically update on the item.");
+            player.sendMessage(ChatColor.GREEN + "Trackers " + ChatColor.DARK_GRAY + "» " + ChatColor.GRAY + "Your old trackers have been converted! Once you gain a point in the tracker, it will automatically update on the item.");
             player.updateInventory();
-            plugin.getLogger().info("Converted stats for player: " + player.getName());
         }
     }
 
@@ -77,6 +75,12 @@ public class ConvertOldTrackersListener implements Listener {
         if (item == null || !item.hasItemMeta()) return false;
 
         ItemMeta meta = item.getItemMeta();
+
+        NamespacedKey trackerIdKey = new NamespacedKey(plugin, "tracker_id");
+        if (meta.getPersistentDataContainer().has(trackerIdKey, PersistentDataType.STRING)) {
+            return false;
+        }
+
         if (!meta.hasLore() || meta.getLore() == null) return false;
 
         List<String> originalLore = meta.getLore();
@@ -94,19 +98,23 @@ public class ConvertOldTrackersListener implements Listener {
                 String oldName = entry.getKey();
 
                 if (lowerStripped.startsWith(oldName)) {
+                    String newId = entry.getValue();
+                    NamespacedKey statKey = new NamespacedKey(plugin, "tracker_stat_" + newId);
+
+                    if (meta.getPersistentDataContainer().has(statKey, PersistentDataType.INTEGER)) {
+                        break;
+                    }
 
                     String remainder = stripped.substring(oldName.length());
-
                     String numberStr = remainder.replace(",", "").replaceAll("[^0-9.]", "");
 
                     if (!numberStr.isEmpty()) {
                         try {
                             double dVal = Double.parseDouble(numberStr);
                             int value = (int) Math.round(dVal);
-                            String newId = entry.getValue();
 
                             meta.getPersistentDataContainer().set(
-                                    new NamespacedKey(plugin, "tracker_stat_" + newId),
+                                    statKey,
                                     PersistentDataType.INTEGER,
                                     value
                             );

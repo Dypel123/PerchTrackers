@@ -143,6 +143,36 @@ public class TrackerListener implements Listener {
         }
     }
 
+    private static final Map<Material, Integer> MAX_HEIGHTS = Map.of(
+            Material.SUGAR_CANE, 3,
+            Material.CACTUS, 3,
+            Material.BAMBOO, 16,
+            Material.KELP, 26,
+            Material.KELP_PLANT, 26
+    );
+
+    private int countBrokenFrom(Block start) {
+        Material type = start.getType();
+
+        // fallback
+        int maxHeight = MAX_HEIGHTS.getOrDefault(type, Integer.MAX_VALUE);
+
+        // only top block
+        if (start.getRelative(0, 1, 0).getType() != type) {
+            return 1;
+        }
+
+        int count = 1;
+        Block up = start.getRelative(0, 1, 0);
+
+        while (up.getType() == type && count < maxHeight) {
+            count++;
+            up = up.getRelative(0, 1, 0);
+        }
+
+        return count;
+    }
+
     @EventHandler(priority = EventPriority.HIGH)
     public void onInventoryClick(InventoryClickEvent e) {
         if (e.getCursor() == null || e.getCurrentItem() == null) return;
@@ -252,7 +282,17 @@ public class TrackerListener implements Listener {
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     public void onBlockBreak(BlockBreakEvent e) {
         if (e.getPlayer().getGameMode() == GameMode.CREATIVE) return;
-        checkTrackers(e.getPlayer(), "BLOCK_BREAK", e.getBlock().getType().name(), 1, e.getBlock());
+
+        Block block = e.getBlock();
+        Material type = block.getType();
+
+        int amount = 1;
+
+        if (MAX_HEIGHTS.containsKey(type)) {
+            amount = countBrokenFrom(block);
+        }
+
+        checkTrackers(e.getPlayer(), "BLOCK_BREAK", type.name(), amount, block);
     }
 
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)

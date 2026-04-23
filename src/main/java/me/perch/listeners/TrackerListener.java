@@ -20,9 +20,12 @@ import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.*;
+import org.bukkit.event.inventory.CraftItemEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.player.*;
+import org.bukkit.inventory.CraftingInventory;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.Recipe;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataType;
 
@@ -171,6 +174,19 @@ public class TrackerListener implements Listener {
         }
 
         return count;
+    }
+
+    private int getMaxCrafts(CraftingInventory inv, Recipe recipe) {
+        ItemStack[] matrix = inv.getMatrix();
+
+        int max = Integer.MAX_VALUE;
+
+        for (ItemStack item : matrix) {
+            if (item == null || item.getType().isAir()) continue;
+            max = Math.min(max, item.getAmount());
+        }
+
+        return max == Integer.MAX_VALUE ? 1 : max;
     }
 
     @EventHandler(priority = EventPriority.HIGH)
@@ -402,5 +418,28 @@ public class TrackerListener implements Listener {
         Player player = (Player) e.getEntity();
         int damage = (int) Math.round(e.getFinalDamage());
         checkTrackers(player, "FALL_DAMAGE", null, damage, null);
+    }
+
+    @EventHandler
+    public void onCraft(CraftItemEvent event) {
+        if (!(event.getWhoClicked() instanceof Player player)) return;
+
+        ItemStack result = event.getRecipe().getResult();
+
+        String targetName = result.getType().name();
+
+        int perCraftAmount = result.getAmount();
+
+        CraftingInventory inv = event.getInventory();
+
+        int crafts = 1;
+
+        if (event.isShiftClick()) {
+            crafts = getMaxCrafts(inv, event.getRecipe());
+        }
+
+        int totalAmount = perCraftAmount * crafts;
+
+        checkTrackers(player, "CRAFT_ITEM", targetName, totalAmount, null);
     }
 }

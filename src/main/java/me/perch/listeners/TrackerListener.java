@@ -201,31 +201,85 @@ public class TrackerListener implements Listener {
         Player player = (Player) e.getWhoClicked();
 
         if (!cursor.hasItemMeta()) return;
-        if (!cursor.getItemMeta().getPersistentDataContainer().has(plugin.getTrackerManager().TRACKER_ID_KEY, PersistentDataType.STRING)) return;
+
+        if (plugin.getTrackerManager().isTrackerRemover(cursor)) {
+            e.setCancelled(true);
+
+            boolean removedAny = removeAllTrackersFromItem(current, player);
+
+            if (!removedAny) {
+                player.sendMessage(plugin.getConfigManager().getPrefix() +
+                        plugin.getConfigManager().getMessage("no_trackers_to_remove"));
+                return;
+            }
+
+            cursor.setAmount(cursor.getAmount() - 1);
+            player.sendMessage(plugin.getConfigManager().getPrefix() +
+                    plugin.getConfigManager().getMessage("tracker_remover_used"));
+            playApplicationEffects(player);
+            return;
+        }
+
+        if (!cursor.getItemMeta().getPersistentDataContainer().has(plugin.getTrackerManager().TRACKER_ID_KEY, PersistentDataType.STRING)) {
+            return;
+        }
 
         String trackerId = cursor.getItemMeta().getPersistentDataContainer().get(plugin.getTrackerManager().TRACKER_ID_KEY, PersistentDataType.STRING);
         YamlConfiguration config = plugin.getTrackerManager().getTrackerConfig(trackerId);
 
+        if (config == null) {
+            player.sendMessage(plugin.getConfigManager().getMessage("invalid_tracker"));
+            return;
+        }
+
         if (!isAllowed(current.getType().name(), config.getStringList("allowed-items"))) {
-            player.sendMessage(plugin.getConfigManager().getMessage("invalid_item_type"));
+            player.sendMessage(plugin.getConfigManager().getPrefix() +
+                    plugin.getConfigManager().getMessage("invalid_item_type"));
             return;
         }
 
         if (ItemUtil.hasTracker(current, trackerId)) {
-            player.sendMessage(plugin.getConfigManager().getMessage("tracker_already_applied"));
+            player.sendMessage(plugin.getConfigManager().getPrefix() +
+                    plugin.getConfigManager().getMessage("tracker_already_applied"));
             return;
         }
 
         ItemMeta toolMeta = current.getItemMeta();
         toolMeta.getPersistentDataContainer().set(new org.bukkit.NamespacedKey(plugin, "tracker_stat_" + trackerId), PersistentDataType.INTEGER, 0);
         current.setItemMeta(toolMeta);
+
         ItemUtil.updateItemLore(current, trackerId, config.getString("lore-format"));
 
         e.setCancelled(true);
         cursor.setAmount(cursor.getAmount() - 1);
-        player.sendMessage(plugin.getConfigManager().getMessage("tracker_applied"));
+        player.sendMessage(plugin.getConfigManager().getPrefix() +
+                plugin.getConfigManager().getMessage("tracker_applied"));
 
         playApplicationEffects(player);
+    }
+
+    private boolean removeAllTrackersFromItem(ItemStack item, Player player) {
+        boolean removed = false;
+
+        for (String id : new HashSet<>(plugin.getTrackerManager().getTrackerIds())) {
+            if (!ItemUtil.hasTracker(item, id)) continue;
+
+            YamlConfiguration config = plugin.getTrackerManager().getTrackerConfig(id);
+            if (config == null) continue;
+
+            ItemStack returnedTracker = plugin.getTrackerManager().getTrackerItem(id);
+            if (returnedTracker != null) {
+                HashMap<Integer, ItemStack> leftovers = player.getInventory().addItem(returnedTracker);
+                leftovers.values().forEach(leftover ->
+                        player.getWorld().dropItemNaturally(player.getLocation(), leftover)
+                );
+            }
+
+            ItemUtil.removeTracker(item, id, config.getString("lore-format"));
+            removed = true;
+        }
+
+        return removed;
     }
 
     private void playApplicationEffects(Player player) {
